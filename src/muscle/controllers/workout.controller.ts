@@ -13,22 +13,33 @@ export class WorkoutController {
     private workoutService: WorkoutService
   ) { }
 
-  @Token()
   @Get()
-  async getAll(): Promise<Workout[]> {
-    return await this.workoutService.getAll();
+  async getAllWorkouts(): Promise<Workout[]> {
+    return await this.workoutService.getAllWorkouts();
+  }
+
+  @Token()
+  @Get(':id')
+  async getWorkout(@Param('id') workoutId: string): Promise<Workout> {
+    return await this.workoutService.getWorkout(workoutId);
   }
 
   @Token()
   @Post()
-  async create(@Body() data: AddWorkoutDto) {
-    return await this.workoutService.create(data);
+  async addWorkout(@Body() data: AddWorkoutDto): Promise<Workout> {
+    return await this.workoutService.addWorkout(data);
   }
 
   @Token()
   @Post(':id/join')
-  async join(@Param('id') workoutId: string, @UserID() userId: string) {
-    return await this.workoutService.join(workoutId, userId);
+  async joinWorkout(@Param('id') workoutId: string, @UserID() userId: string): Promise<Workout> {
+    return await this.workoutService.joinWorkout(workoutId, userId);
+  }
+
+  @Token()
+  @Post(':id/leave')
+  async leaveWorkout(@Param('id') workoutId: string, @UserID() userId: string): Promise<Workout> {
+    return await this.workoutService.leaveWorkout(workoutId, userId);
   }
 
 }

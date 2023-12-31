@@ -3,10 +3,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { Trainer, TrainerSchema } from './schemas/trainer.schema';
 import { Workout, WorkoutSchema } from './schemas/workout.schema';
-import { TrainerRepository } from './repositories/trainer.repository';
-import { WorkoutRepository } from './repositories/workout.repository';
+
 import { TrainerService } from './services/trainer.service';
 import { WorkoutService } from './services/workout.service';
+
 import { TrainerController } from './controllers/trainer.controller';
 import { WorkoutController } from './controllers/workout.controller';
 
@@ -18,8 +18,6 @@ import { WorkoutController } from './controllers/workout.controller';
     ])
   ],
   providers: [
-    TrainerRepository,
-    WorkoutRepository,
     TrainerService,
     WorkoutService,
   ],

@@ -18,7 +18,6 @@ export class TrainerController {
 
   @Post()
   async create(@Body() data: AddTrainerDto): Promise<Trainer> {
-    console.log(data.skills);
     return await this.trainerService.create(data);
   }
 
