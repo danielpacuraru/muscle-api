@@ -23,17 +23,17 @@ import { AuthController } from './controllers/auth.controller';
       inject: [ConfigService]
     }),
     MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema }
-    ])
+      { name: User.name, schema: UserSchema },
+    ]),
   ],
   providers: [
     UserService,
     AuthService,
     LocalStrategy,
-    JwtStrategy
+    JwtStrategy,
   ],
   controllers: [
-    AuthController
+    AuthController,
   ]
 })
 export class AuthModule { }

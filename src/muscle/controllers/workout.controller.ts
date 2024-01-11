@@ -18,19 +18,17 @@ export class WorkoutController {
     return await this.workoutService.getAllWorkouts();
   }
 
-  @Token()
   @Get(':id')
   async getWorkout(@Param('id') workoutId: string): Promise<Workout> {
     return await this.workoutService.getWorkout(workoutId);
   }
 
-  @Token()
   @Post()
   async addWorkout(@Body() data: AddWorkoutDto): Promise<Workout> {
     return await this.workoutService.addWorkout(data);
   }
 
-  @Token()
+  /*@Token()
   @Post(':id/join')
   async joinWorkout(@Param('id') workoutId: string, @UserID() userId: string): Promise<Workout> {
     return await this.workoutService.joinWorkout(workoutId, userId);
@@ -40,6 +38,6 @@ export class WorkoutController {
   @Post(':id/leave')
   async leaveWorkout(@Param('id') workoutId: string, @UserID() userId: string): Promise<Workout> {
     return await this.workoutService.leaveWorkout(workoutId, userId);
-  }
+  }*/
 
 }

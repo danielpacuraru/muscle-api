@@ -1,25 +1,41 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-import { User } from '../../auth/schemas/user.schema';
+import { Member } from '../schemas/member.schema';
+
+@Schema()
+class Student {
+
+  @Prop({ type: Types.ObjectId, ref: 'Member' })
+  memberId: Types.ObjectId;
+
+  @Prop()
+  status: string;
+
+}
+
+const StudentSchema = SchemaFactory.createForClass(Student);
 
 @Schema({ versionKey: false })
 export class Workout extends Document {
 
   @Prop({ required: true })
-  trainerName: string;
+  name: string;
+
+  @Prop()
+  details?: string;
 
   @Prop({ required: true })
-  trainerSkill: string;
+  coach: string;
 
   @Prop({ required: true })
   date: Date;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
-  members: Types.ObjectId[];
-
   @Prop({ default: true })
   isActive: boolean;
+
+  @Prop({ type: [StudentSchema] })
+  students: Student[];
 
 }
 

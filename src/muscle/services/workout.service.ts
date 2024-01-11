@@ -19,7 +19,7 @@ export class WorkoutService {
   async getWorkout(workoutId: string): Promise<Workout> {
     return await this.workoutModel
       .findOne({ _id: workoutId, isActive: true })
-      .populate({ path: 'members', select: 'name email' })
+      .populate({ path: 'members', select: 'firstName lastName' })
       .exec();
   }
 
@@ -28,7 +28,7 @@ export class WorkoutService {
     return await workout.save();
   }
 
-  async joinWorkout(workoutId: string, userId: string): Promise<Workout> {
+  /*async joinWorkout(workoutId: string, userId: string): Promise<Workout> {
     const workout: Workout = await this.workoutModel.findOne({ _id: workoutId, isActive: true }).exec();
     const userIdObj = Types.ObjectId.createFromHexString(userId);
 
@@ -60,6 +60,6 @@ export class WorkoutService {
     workout.members.splice(workout.members.indexOf(userIdObj), 1);
 
     return await workout.save();
-  }
+  }*/
 
 }

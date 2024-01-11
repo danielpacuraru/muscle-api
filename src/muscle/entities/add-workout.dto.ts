@@ -1,14 +1,18 @@
-import { IsNotEmpty, IsString, IsDate } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsDate } from 'class-validator';
 
 export class AddWorkoutDto {
 
   @IsNotEmpty()
   @IsString()
-  trainerName: string;
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  details?: string;
 
   @IsNotEmpty()
   @IsString()
-  trainerSkill: string;
+  coach: string;
 
   @IsNotEmpty()
   @IsDate()
