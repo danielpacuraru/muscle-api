@@ -30,6 +30,9 @@ import { WorkoutController } from './controllers/workout.controller';
     MemberController,
     TrainerController,
     WorkoutController,
-  ]
+  ],
+  exports: [
+    MemberService
+  ],
 })
 export class MuscleModule { }

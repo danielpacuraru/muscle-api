@@ -3,14 +3,20 @@ import { Document, Types } from 'mongoose';
 
 import { Member } from '../schemas/member.schema';
 
+export enum AttendanceStatus {
+  PENDING = 'Pending',
+  ATTENDED = 'Attended',
+  SKIPPED = 'Skipped',
+}
+
 @Schema()
 class Student {
 
   @Prop({ type: Types.ObjectId, ref: 'Member' })
-  memberId: Types.ObjectId;
+  member: Types.ObjectId;
 
   @Prop()
-  status: string;
+  status: AttendanceStatus;
 
 }
 

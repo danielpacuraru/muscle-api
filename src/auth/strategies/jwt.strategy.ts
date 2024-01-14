@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { AuthService, Payload } from '../services/auth.service';
 import { User } from '../schemas/user.schema';
+import { Member } from '../../muscle/schemas/member.schema';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -17,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: Payload): Promise<User> {
+  async validate(payload: Payload): Promise<Member> {
     return this.authService.validateUserByPayload(payload);
   }
 

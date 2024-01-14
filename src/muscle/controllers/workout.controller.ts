@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 
-import { Token } from '../entities/token.decorator';
+import { Member } from '../entities/member.decorator';
 import { UserID } from '../../auth/decorators/user-id.decorator';
 import { WorkoutService } from '../services/workout.service';
 import { Workout } from '../schemas/workout.schema';
@@ -12,6 +12,13 @@ export class WorkoutController {
   constructor(
     private workoutService: WorkoutService
   ) { }
+
+  @Member()
+  @Get('all')
+  async getAllllWorkouts(@UserID() userId: string): Promise<Workout[]> {
+    console.log(userId);
+    return await this.workoutService.getAllllWorkouts();
+  }
 
   @Get()
   async getAllWorkouts(): Promise<Workout[]> {
@@ -28,16 +35,16 @@ export class WorkoutController {
     return await this.workoutService.addWorkout(data);
   }
 
-  /*@Token()
+  @Member()
   @Post(':id/join')
   async joinWorkout(@Param('id') workoutId: string, @UserID() userId: string): Promise<Workout> {
-    return await this.workoutService.joinWorkout(workoutId, userId);
+    return await this.workoutService.joinWorkout(workoutId, '659fa99d0efc795f025c662d');
   }
 
-  @Token()
+  @Member()
   @Post(':id/leave')
   async leaveWorkout(@Param('id') workoutId: string, @UserID() userId: string): Promise<Workout> {
     return await this.workoutService.leaveWorkout(workoutId, userId);
-  }*/
+  }
 
 }

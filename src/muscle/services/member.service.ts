@@ -16,6 +16,10 @@ export class MemberService {
     return await this.memberModel.find().exec();
   }
 
+  async getById(id: string): Promise<Member> {
+    return await this.memberModel.findById(id).exec();
+  }
+
   async create(data: AddMemberDto): Promise<Member> {
     const member = new this.memberModel(data);
     return await member.save();

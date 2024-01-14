@@ -5,6 +5,8 @@ import * as bcrypt from 'bcrypt';
 import { UserService } from '../services/user.service';
 import { User } from '../schemas/user.schema';
 import { SignupDto } from '../dtos/signup.dto';
+import { MemberService } from '../../muscle/services/member.service';
+import { Member } from '../../muscle/schemas/member.schema';
 
 export interface Payload { sub: string; }
 
@@ -15,7 +17,8 @@ export class AuthService {
 
   constructor(
     private jwtService: JwtService,
-    private userService: UserService
+    private userService: UserService,
+    private memberService: MemberService,
   ) { }
 
   public async createUser(signupDto: SignupDto): Promise<User> {
@@ -47,9 +50,9 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  public async validateUserByPayload(payload: Payload): Promise<User> {
+  public async validateUserByPayload(payload: Payload): Promise<Member> {
     const userId: string = payload.sub;
-    const user: User | null = await this.userService.findById(userId);
+    const user: Member | null = await this.memberService.getById(userId);
 
     if(!user) {
       throw new UnauthorizedException();

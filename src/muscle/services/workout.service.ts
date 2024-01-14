@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
-import { Workout } from '../schemas/workout.schema';
+import { Workout, AttendanceStatus } from '../schemas/workout.schema';
 import { AddWorkoutDto } from '../entities/add-workout.dto';
 
 @Injectable()
@@ -16,10 +16,26 @@ export class WorkoutService {
     return await this.workoutModel.find({ isActive: true }).exec();
   }
 
+  async getAllllWorkouts(): Promise<Workout[]> {
+    return await this.workoutModel.aggregate([
+      {
+        $match: { isActive: true },
+      },
+      {
+        $project: {
+          name: 1,
+          coach: 1,
+          date: 1,
+          students: { $size: '$students' },
+        },
+      },
+    ]).exec();
+  }
+
   async getWorkout(workoutId: string): Promise<Workout> {
     return await this.workoutModel
       .findOne({ _id: workoutId, isActive: true })
-      .populate({ path: 'members', select: 'firstName lastName' })
+      .populate({ path: 'students.member', model: 'Member', select: 'firstName lastName' })
       .exec();
   }
 
@@ -28,7 +44,7 @@ export class WorkoutService {
     return await workout.save();
   }
 
-  /*async joinWorkout(workoutId: string, userId: string): Promise<Workout> {
+  async joinWorkout(workoutId: string, userId: string): Promise<Workout> {
     const workout: Workout = await this.workoutModel.findOne({ _id: workoutId, isActive: true }).exec();
     const userIdObj = Types.ObjectId.createFromHexString(userId);
 
@@ -36,11 +52,14 @@ export class WorkoutService {
       throw new NotFoundException();
     }
 
-    if(workout.members.includes(userIdObj)) {
+    /*if(workout.members.includes(userIdObj)) {
       return workout;
-    }
+    }*/
 
-    workout.members.push(userIdObj);
+    workout.students.push({
+      member: userIdObj,
+      status: AttendanceStatus.PENDING
+    });
 
     return await workout.save();
   }
@@ -53,13 +72,13 @@ export class WorkoutService {
       throw new NotFoundException();
     }
 
-    if(!workout.members.includes(userIdObj)) {
+    /*if(!workout.members.includes(userIdObj)) {
       return workout;
     }
 
-    workout.members.splice(workout.members.indexOf(userIdObj), 1);
+    workout.members.splice(workout.members.indexOf(userIdObj), 1);*/
 
     return await workout.save();
-  }*/
+  }
 
 }
