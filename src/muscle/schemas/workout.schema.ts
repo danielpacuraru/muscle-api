@@ -37,11 +37,11 @@ export class Workout extends Document {
   @Prop({ required: true })
   date: Date;
 
-  @Prop({ default: true })
-  isActive: boolean;
-
   @Prop({ type: [StudentSchema] })
   students: Student[];
+
+  @Prop({ default: true })
+  isActive: boolean;
 
 }
 

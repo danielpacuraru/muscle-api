@@ -13,10 +13,6 @@ export class WorkoutService {
   ) { }
 
   async getAllWorkouts(): Promise<Workout[]> {
-    return await this.workoutModel.find({ isActive: true }).exec();
-  }
-
-  async getAllllWorkouts(): Promise<Workout[]> {
     return await this.workoutModel.aggregate([
       {
         $match: { isActive: true },

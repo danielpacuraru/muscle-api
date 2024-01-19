@@ -13,13 +13,6 @@ export class WorkoutController {
     private workoutService: WorkoutService
   ) { }
 
-  @Member()
-  @Get('all')
-  async getAllllWorkouts(@UserID() userId: string): Promise<Workout[]> {
-    console.log(userId);
-    return await this.workoutService.getAllllWorkouts();
-  }
-
   @Get()
   async getAllWorkouts(): Promise<Workout[]> {
     return await this.workoutService.getAllWorkouts();
