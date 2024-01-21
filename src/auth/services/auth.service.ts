@@ -1,64 +1,87 @@
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 
 import { UserService } from '../services/user.service';
 import { User } from '../schemas/user.schema';
-import { SignupDto } from '../dtos/signup.dto';
-import { MemberService } from '../../muscle/services/member.service';
-import { Member } from '../../muscle/schemas/member.schema';
+import { SignupDto } from '../entities/signup.dto';
+import { TokenDto } from '../entities/token.dto';
+import { Payload } from '../entities/payload.interface';
+import { Roles } from '../entities/roles.enum';
 
-export interface Payload { sub: string; }
-
-export const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
 @Injectable()
 export class AuthService {
 
   constructor(
     private jwtService: JwtService,
-    private userService: UserService,
-    private memberService: MemberService,
+    private userService: UserService
   ) { }
 
   public async createUser(signupDto: SignupDto): Promise<User> {
-    const userExists: boolean = await this.userService.findByEmail(signupDto.email) !== null;
+    const user: User = await this.userService.create(signupDto);
 
-    if(userExists) {
+    if(!user) {
       throw new ConflictException();
-    }
-
-    return this.userService.create(signupDto);
-  }
-
-  public async validateUserByCredentials(email: string, password: string): Promise<User> {
-    const user: User = await this.userService.findByEmail(email);
-
-    if(!user || user.password !== await bcrypt.hash(password, user.salt)) {
-      await sleep(2000);
-      throw new UnauthorizedException();
     }
 
     return user;
   }
 
-  public async generateToken(id: string): Promise<string> {
-    const payload: Payload = {
-      sub: id
-    };
-
-    return this.jwtService.sign(payload);
-  }
-
-  public async validateUserByPayload(payload: Payload): Promise<Member> {
-    const userId: string = payload.sub;
-    const user: Member | null = await this.memberService.getById(userId);
+  public async validatePayload(payload: Payload): Promise<User> {console.log(payload);
+    const user: User = await this.userService.findById(payload.sub);
 
     if(!user) {
       throw new UnauthorizedException();
     }
 
     return user;
+  }
+
+  public async validateCredentials(phone: string, password: string): Promise<User> {
+    const user: User = await this.userService.findByPhone(phone);
+
+    if(!user || user.role === Roles.MEMBER) {
+      await sleep(1000);
+      throw new UnauthorizedException();
+    }
+
+    return user;
+  }
+
+  public async validateToken(token: string): Promise<User> {
+    const tokenDto = new TokenDto();
+
+    tokenDto.token = token;
+
+    const errors = await validate(tokenDto);
+
+    if(errors.length > 0) {
+      await sleep(1000);
+      throw new UnauthorizedException();
+    }
+
+    const user: User = await this.userService.findByToken(token);
+
+    if(!user || user.role !== Roles.MEMBER) {
+      await sleep(1000);
+      throw new UnauthorizedException();
+    }
+
+    user.token = undefined;
+
+    return await user.save();
+  }
+
+  public async signToken(user: User): Promise<string> {
+    const payload: Payload = {
+      sub: user._id.toString(),
+      role: user.role
+    };
+
+    return this.jwtService.signAsync(payload);
   }
 
 }

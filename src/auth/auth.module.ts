@@ -8,8 +8,9 @@ import { MuscleModule } from '../muscle/muscle.module';
 import { User, UserSchema } from './schemas/user.schema';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
-import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
+import { TokenStrategy } from './strategies/token.strategy';
 import { AuthController } from './controllers/auth.controller';
 
 @Module({
@@ -26,13 +27,13 @@ import { AuthController } from './controllers/auth.controller';
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
     ]),
-    MuscleModule,
   ],
   providers: [
     UserService,
     AuthService,
-    LocalStrategy,
     JwtStrategy,
+    LocalStrategy,
+    TokenStrategy,
   ],
   controllers: [
     AuthController,

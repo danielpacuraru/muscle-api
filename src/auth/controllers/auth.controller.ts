@@ -1,11 +1,13 @@
-import { Controller, UseGuards, Post, Get, Request, Body } from '@nestjs/common';
+import { Controller, UseGuards, Post, Get, Body } from '@nestjs/common';
 
-import { AuthService } from '../services/auth.service';
-import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { SignupDto } from '../dtos/signup.dto';
-import { LoginDto } from '../dtos/login.dto';
-import { UserID } from '../decorators/user-id.decorator';
+import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
+import { TokenAuthGuard } from '../../auth/guards/token-auth.guard';
+import { AuthService } from '../services/auth.service';
+import { SignupDto } from '../entities/signup.dto';
+import { TokenDto } from '../entities/token.dto';
+import { User } from '../schemas/user.schema';
+import { GetUser } from '../decorators/user.decorator';
 
 @Controller()
 export class AuthController {
@@ -17,27 +19,33 @@ export class AuthController {
   @Post('signup')
   async signup(
     @Body() signupDto: SignupDto
-  ): Promise<void> {
-    await this.authService.createUser(signupDto);
+  ): Promise<User> {
+    return await this.authService.createUser(signupDto);
   }
 
   @UseGuards(LocalAuthGuard)
+  @Post('admin/login')
+  async adminLogin() {
+    return { token: '444' };
+  }
+
+  @UseGuards(TokenAuthGuard)
   @Post('login')
   async login(
-    @Body() loginDto: LoginDto,
-    @UserID() userId: string
+    @GetUser() user: User
   ) {
-    const token = await this.authService.generateToken(userId);
-    return { token };
+    return {
+      firstName: user.firstName,
+      token: await this.authService.signToken(user)
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async me(
-    @Request() req
+    @GetUser() user: User
   ) {
-    const { name, email } = req.user;
-    return { name, email }
+    return user;
   }
 
 }

@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcrypt';
 
 import { User } from '../schemas/user.schema';
-import { SignupDto } from '../dtos/signup.dto';
+import { SignupDto } from '../entities/signup.dto';
 
 @Injectable()
 export class UserService {
@@ -13,26 +12,20 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<User>
   ) { }
 
-  public async create(signupDto: SignupDto): Promise<User> {
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(signupDto.password, salt);
-
-    const newUser = await this.userModel.create({
-      name: signupDto.name,
-      email: signupDto.email,
-      password: hashedPassword,
-      salt: salt,
-    });
-
-    return newUser;
-  }
-
-  public async findByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).exec();
+  public async create(signupDto: SignupDto): Promise<User | null> {
+    return await this.userModel.create(signupDto);
   }
 
   public async findById(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
+    return await this.userModel.findById(id).exec();
+  }
+
+  public async findByPhone(phone: string): Promise<User | null> {
+    return await this.userModel.findOne({ phone }).exec();
+  }
+
+  public async findByToken(token: string): Promise<User | null> {
+    return await this.userModel.findOne({ token }).exec();
   }
 
 }

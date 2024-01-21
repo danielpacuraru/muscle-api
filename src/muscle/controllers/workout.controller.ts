@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, UseGuards, Get, Post, Param, Body } from '@nestjs/common';
 
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Member } from '../entities/member.decorator';
 import { UserID } from '../../auth/decorators/user-id.decorator';
 import { WorkoutService } from '../services/workout.service';
@@ -13,6 +14,7 @@ export class WorkoutController {
     private workoutService: WorkoutService
   ) { }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllWorkouts(): Promise<Workout[]> {
     return await this.workoutService.getAllWorkouts();

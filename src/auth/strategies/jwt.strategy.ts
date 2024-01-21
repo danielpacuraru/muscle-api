@@ -1,11 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 
-import { AuthService, Payload } from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
+import { Payload } from '../entities/payload.interface';
 import { User } from '../schemas/user.schema';
-import { Member } from '../../muscle/schemas/member.schema';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,8 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: Payload): Promise<Member> {
-    return this.authService.validateUserByPayload(payload);
+  async validate(payload: Payload): Promise<User> {
+    return await this.authService.validatePayload(payload);
   }
 
 }

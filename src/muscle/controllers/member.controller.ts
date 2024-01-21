@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, UseGuards, Get, Post, Body } from '@nestjs/common';
 
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { MemberService } from '../services/member.service';
 import { Member } from '../schemas/member.schema';
 import { AddMemberDto } from '../entities/add-member.dto';
@@ -11,6 +12,7 @@ export class MemberController {
     private memberService: MemberService
   ) { }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAll(): Promise<Member[]> {
     return await this.memberService.getAll();
