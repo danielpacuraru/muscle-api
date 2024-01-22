@@ -11,11 +11,11 @@ export class AddWorkoutDto {
   details?: string;
 
   @IsNotEmpty()
-  @IsString()
-  coach: string;
-
-  @IsNotEmpty()
   @IsDate()
   date: Date;
+
+  @IsNotEmpty()
+  @IsString()
+  trainer: string;
 
 }

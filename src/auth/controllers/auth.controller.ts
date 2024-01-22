@@ -20,13 +20,8 @@ export class AuthController {
   async signup(
     @Body() signupDto: SignupDto
   ): Promise<User> {
-    return this.authService.createUser(signupDto);
-  }
-
-  @UseGuards(LocalAuthGuard)
-  @Post('admin/login')
-  async adminLogin() {
-    return { token: '444' };
+    const user: User = await this.authService.createUser(signupDto);
+    return user;
   }
 
   @UseGuards(TokenAuthGuard)
@@ -37,7 +32,7 @@ export class AuthController {
     return {
       firstName: user.firstName,
       token: await this.authService.signToken(user)
-    }
+    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,7 +45,7 @@ export class AuthController {
       email: user.email,
       phone: user.phone,
       role: user.role
-    }
+    };
   }
 
 }

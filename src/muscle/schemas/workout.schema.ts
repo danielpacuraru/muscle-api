@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-import { Member } from '../schemas/member.schema';
+import { User } from '../../auth/schemas/user.schema';
 
 export enum AttendanceStatus {
   PENDING = 'Pending',
@@ -12,8 +12,8 @@ export enum AttendanceStatus {
 @Schema()
 class Student {
 
-  @Prop({ type: Types.ObjectId, ref: 'Member' })
-  member: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  student: Types.ObjectId;
 
   @Prop()
   status: AttendanceStatus;
@@ -32,10 +32,10 @@ export class Workout extends Document {
   details?: string;
 
   @Prop({ required: true })
-  coach: string;
+  date: Date;
 
   @Prop({ required: true })
-  date: Date;
+  trainer: string;
 
   @Prop({ type: [StudentSchema] })
   students: Student[];

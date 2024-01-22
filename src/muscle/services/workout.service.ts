@@ -20,9 +20,9 @@ export class WorkoutService {
       {
         $project: {
           name: 1,
-          coach: 1,
           date: 1,
-          students: { $size: '$students' },
+          trainer: 1,
+          studentsCount: { $size: '$students' },
         },
       },
     ]).exec();
@@ -31,7 +31,7 @@ export class WorkoutService {
   async getWorkout(workoutId: string): Promise<Workout> {
     return await this.workoutModel
       .findOne({ _id: workoutId, isActive: true })
-      .populate({ path: 'students.member', model: 'Member', select: 'firstName lastName' })
+      .populate({ path: 'students.student', model: 'User', select: 'firstName lastName' })
       .exec();
   }
 
@@ -53,7 +53,7 @@ export class WorkoutService {
     }*/
 
     workout.students.push({
-      member: userIdObj,
+      student: userIdObj,
       status: AttendanceStatus.PENDING
     });
 
