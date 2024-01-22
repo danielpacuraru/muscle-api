@@ -30,7 +30,7 @@ export class AuthService {
     return user;
   }
 
-  public async validatePayload(payload: Payload): Promise<User> {console.log(payload);
+  public async validatePayload(payload: Payload): Promise<User> {
     const user: User = await this.userService.findById(payload.sub);
 
     if(!user) {
@@ -65,7 +65,7 @@ export class AuthService {
 
     const user: User = await this.userService.findByToken(token);
 
-    if(!user || user.role !== Roles.MEMBER) {
+    if(!user) {
       await sleep(1000);
       throw new UnauthorizedException();
     }

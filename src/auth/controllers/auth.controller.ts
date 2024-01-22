@@ -20,7 +20,7 @@ export class AuthController {
   async signup(
     @Body() signupDto: SignupDto
   ): Promise<User> {
-    return await this.authService.createUser(signupDto);
+    return this.authService.createUser(signupDto);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -45,7 +45,12 @@ export class AuthController {
   async me(
     @GetUser() user: User
   ) {
-    return user;
+    return {
+      name: user.firstName + ' ' + user.lastName,
+      email: user.email,
+      phone: user.phone,
+      role: user.role
+    }
   }
 
 }
