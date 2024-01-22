@@ -5,7 +5,6 @@ import { Student } from '../../auth/decorators/student.decorator';
 import { GetUser } from '../../auth/decorators/user.decorator';
 import { User } from '../../auth/schemas/user.schema';
 
-import { Member } from '../entities/member.decorator';
 import { WorkoutService } from '../services/workout.service';
 import { Workout } from '../schemas/workout.schema';
 import { AddWorkoutDto } from '../entities/add-workout.dto';
