@@ -70,7 +70,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    user.token = undefined;
+    // user.token = undefined;
 
     return await user.save();
   }

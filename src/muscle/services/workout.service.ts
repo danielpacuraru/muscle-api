@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
@@ -31,7 +31,7 @@ export class WorkoutService {
   async getWorkout(workoutId: string): Promise<Workout> {
     return await this.workoutModel
       .findOne({ _id: workoutId, isActive: true })
-      .populate({ path: 'students.student', model: 'User', select: 'firstName lastName' })
+      .populate({ path: 'students.student', model: 'User', select: 'firstName lastName phone' })
       .exec();
   }
 
@@ -42,39 +42,45 @@ export class WorkoutService {
 
   async joinWorkout(workoutId: string, userId: string): Promise<Workout> {
     const workout: Workout = await this.workoutModel.findOne({ _id: workoutId, isActive: true }).exec();
-    const userIdObj = Types.ObjectId.createFromHexString(userId);
 
     if(!workout) {
       throw new NotFoundException();
     }
 
-    /*if(workout.members.includes(userIdObj)) {
-      return workout;
-    }*/
+    const index = workout.students.findIndex(student => student.student.toString() === userId);
+
+    if(index !== -1) {
+      throw new BadRequestException();
+    }
 
     workout.students.push({
-      student: userIdObj,
+      student: Types.ObjectId.createFromHexString(userId),
       status: AttendanceStatus.PENDING
     });
 
-    return await workout.save();
+    await workout.save();
+
+    return this.getWorkout(workoutId);
   }
 
   async leaveWorkout(workoutId: string, userId: string): Promise<Workout> {
     const workout: Workout = await this.workoutModel.findOne({ _id: workoutId, isActive: true }).exec();
-    const userIdObj = Types.ObjectId.createFromHexString(userId);
 
     if(!workout) {
       throw new NotFoundException();
     }
 
-    /*if(!workout.members.includes(userIdObj)) {
-      return workout;
+    const index = workout.students.findIndex(student => student.student.toString() === userId);
+
+    if(index === -1) {
+      throw new BadRequestException();
     }
 
-    workout.members.splice(workout.members.indexOf(userIdObj), 1);*/
+    workout.students.splice(index, 1);
 
-    return await workout.save();
+    await workout.save();
+
+    return this.getWorkout(workoutId);
   }
 
 }

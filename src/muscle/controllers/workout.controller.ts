@@ -18,20 +18,25 @@ export class WorkoutController {
 
   @Student()
   @Get()
-  async getAllWorkouts(): Promise<Workout[]> {
-    return await this.workoutService.getAllWorkouts();
+  async getAllWorkouts(
+  ): Promise<Workout[]> {
+    return this.workoutService.getAllWorkouts();
   }
 
   @Student()
   @Get(':id')
-  async getWorkout(@Param('id') workoutId: string): Promise<Workout> {
-    return await this.workoutService.getWorkout(workoutId);
+  async getWorkout(
+    @Param('id') workoutId: string
+  ): Promise<Workout> {
+    return this.workoutService.getWorkout(workoutId);
   }
 
   @Admin()
   @Post()
-  async addWorkout(@Body() data: AddWorkoutDto): Promise<Workout> {
-    return await this.workoutService.addWorkout(data);
+  async addWorkout(
+    @Body() data: AddWorkoutDto
+  ): Promise<Workout> {
+    return this.workoutService.addWorkout(data);
   }
 
   @Student()
@@ -43,10 +48,13 @@ export class WorkoutController {
     return this.workoutService.joinWorkout(workoutId, user._id.toString());
   }
 
-  /*@Member()
+  @Student()
   @Post(':id/leave')
-  async leaveWorkout(@Param('id') workoutId: string): Promise<Workout> {
-    return await this.workoutService.leaveWorkout(workoutId, '659fa99d0efc795f025c662d');
-  }*/
+  async leaveWorkout(
+    @GetUser() user: User,
+    @Param('id') workoutId: string
+  ): Promise<Workout> {
+    return this.workoutService.leaveWorkout(workoutId, user._id.toString());
+  }
 
 }
