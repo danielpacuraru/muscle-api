@@ -31,6 +31,9 @@ export class AuthController {
   ) {
     return {
       firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      email: user.email,
       token: await this.authService.signToken(user)
     };
   }
