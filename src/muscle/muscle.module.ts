@@ -7,6 +7,7 @@ import { Workout, WorkoutSchema } from './schemas/workout.schema';
 import { TrainerService } from './services/trainer.service';
 import { WorkoutService } from './services/workout.service';
 
+import { MemberController } from './controllers/member.controller';
 import { TrainerController } from './controllers/trainer.controller';
 import { WorkoutController } from './controllers/workout.controller';
 
@@ -22,6 +23,7 @@ import { WorkoutController } from './controllers/workout.controller';
     WorkoutService,
   ],
   controllers: [
+    MemberController,
     TrainerController,
     WorkoutController,
   ],

@@ -83,4 +83,13 @@ export class WorkoutService {
     return this.getWorkout(workoutId);
   }
 
+  async getAgenda(userId: string): Promise<Workout[]> {
+    const userObj = Types.ObjectId.createFromHexString(userId);
+
+    return await this.workoutModel
+      .find({ 'students.student': userObj, isActive: true })
+      .select('name date trainer')
+      .exec();
+  }
+
 }
