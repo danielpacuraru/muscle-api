@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema({ versionKey: false })
+@Schema({ timestamps: true })
 export class Trainer extends Document {
 
   @Prop({ required: true })

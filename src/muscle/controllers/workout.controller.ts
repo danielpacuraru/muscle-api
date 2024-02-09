@@ -1,60 +1,59 @@
-import { Controller, UseGuards, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 
+import { Token } from '../../auth/decorators/token.decorator';
 import { Admin } from '../../auth/decorators/admin.decorator';
-import { Student } from '../../auth/decorators/student.decorator';
-import { GetUser } from '../../auth/decorators/user.decorator';
-import { User } from '../../auth/schemas/user.schema';
-
 import { WorkoutService } from '../services/workout.service';
 import { Workout } from '../schemas/workout.schema';
 import { AddWorkoutDto } from '../entities/add-workout.dto';
 
-@Controller('workouts')
+@Controller()
 export class WorkoutController {
 
   constructor(
     private workoutService: WorkoutService
   ) { }
 
-  @Student()
-  @Get()
+  @Token()
+  @Get('workouts')
   async getAllWorkouts(
-  ): Promise<Workout[]> {
-    return this.workoutService.getAllWorkouts();
+  ): Promise<any[]> {
+    const workouts: Workout[] = await this.workoutService.getAllActiveWorkouts();
+    const list: any[] = [];
+
+    workouts.map((workout: Workout) => {
+      list.push({
+        _id: workout._id.toString(),
+        name: workout.name,
+        details: workout.details,
+        date: workout.date,
+        trainer: workout.trainer
+      });
+    });
+
+    return list;
   }
 
-  @Student()
-  @Get(':id')
+  @Token()
+  @Get('workouts/:id')
   async getWorkout(
     @Param('id') workoutId: string
-  ): Promise<Workout> {
-    return this.workoutService.getWorkout(workoutId);
+  ): Promise<any> {
+    const workout: Workout = await this.workoutService.getActiveWorkout(workoutId);
+    return {
+      _id: workout.id,
+      name: workout.name,
+      details: workout.details,
+      date: workout.date,
+      trainer: workout.trainer
+    };
   }
 
   @Admin()
-  @Post()
+  @Post('workouts')
   async addWorkout(
     @Body() data: AddWorkoutDto
   ): Promise<Workout> {
     return this.workoutService.addWorkout(data);
-  }
-
-  @Student()
-  @Post(':id/join')
-  async joinWorkout(
-    @GetUser() user: User,
-    @Param('id') workoutId: string
-  ): Promise<Workout> {
-    return this.workoutService.joinWorkout(workoutId, user._id.toString());
-  }
-
-  @Student()
-  @Post(':id/leave')
-  async leaveWorkout(
-    @GetUser() user: User,
-    @Param('id') workoutId: string
-  ): Promise<Workout> {
-    return this.workoutService.leaveWorkout(workoutId, user._id.toString());
   }
 
 }

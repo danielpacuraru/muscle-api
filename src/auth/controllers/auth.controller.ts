@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { SignupDto } from '../entities/signup.dto';
 import { TokenDto } from '../entities/token.dto';
 import { User } from '../schemas/user.schema';
-import { GetUser } from '../decorators/user.decorator';
+import { GetUser } from '../decorators/get-user.decorator';
 
 @Controller()
 export class AuthController {

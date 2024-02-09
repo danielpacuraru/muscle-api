@@ -3,7 +3,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Roles } from '../entities/roles.enum';
 
 @Injectable()
-export class StudentGuard implements CanActivate {
+export class MemberGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const user = request.user;

@@ -1,10 +1,9 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { StudentGuard } from '../guards/student.guard';
+import { MemberGuard } from '../guards/member.guard';
 
-export function Student() {
+export function Token() {
   return applyDecorators(
-    UseGuards(JwtAuthGuard),
-    UseGuards(StudentGuard),
+    UseGuards(JwtAuthGuard)
   );
 }
