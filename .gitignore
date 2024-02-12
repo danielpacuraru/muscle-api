@@ -33,3 +33,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Other
+.env
+muscle-up-afdf7-firebase-adminsdk-c6g5i-3f7ec8cee9.json
