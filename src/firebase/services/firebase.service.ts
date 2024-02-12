@@ -10,7 +10,7 @@ export class FirebaseService {
   private firebase: any;
 
   constructor() {
-    const serviceAccount = require(path.resolve(__dirname, '../../../muscleup-e9910-firebase-adminsdk-mkrgn-fa85db4bc0.json'));
+    const serviceAccount = require(path.resolve(__dirname, '../../../muscle-up-afdf7-firebase-adminsdk-c6g5i-3f7ec8cee9.json'));
 
     this.firebase = admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
