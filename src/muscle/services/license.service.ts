@@ -29,7 +29,6 @@ export class LicenseService {
 
   async getActiveLicenses(userId: string): Promise<License[]> {
     const x = rightNow();
-    console.log(x);
     return await this.licenseModel.find({ status: LicenseStatus.ACTIVE, user: userId });
   }
 
