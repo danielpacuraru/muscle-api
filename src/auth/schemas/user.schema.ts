@@ -24,15 +24,11 @@ export class User extends Document {
   @Prop({ required: true })
   role: Roles;
 
-  @Prop()
-  password?: string;
+  @Prop({ default: 0 })
+  pass: number;
 
-  @Prop()
-  salt?: string;
-
-  @Prop()
+  @Prop({ unique: true })
   token?: string;
-
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

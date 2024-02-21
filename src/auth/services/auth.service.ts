@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ConflictException, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { validate } from 'class-validator';
 import * as bcrypt from 'bcrypt';
@@ -11,6 +11,14 @@ import { Payload } from '../entities/payload.interface';
 import { Roles } from '../entities/roles.enum';
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+
+const generateCode = () => {
+  const digit1 = Math.floor(Math.random() * 10).toString();
+  const digit2 = Math.floor(Math.random() * 10).toString();
+  const digit3 = Math.floor(Math.random() * 10).toString();
+  const digit4 = Math.floor(Math.random() * 10).toString();
+  return digit1 + digit2 + digit3 + digit4;
+}
 
 @Injectable()
 export class AuthService {
@@ -82,6 +90,28 @@ export class AuthService {
     };
 
     return this.jwtService.signAsync(payload);
+  }
+
+  public async invitationCode(userId: string, reqRole: Roles): Promise<string> {
+    const user: User = await this.userService.findById(userId);
+
+    if(!user) {
+      throw new BadRequestException();
+    }
+
+    if(reqRole === Roles.MEMBER || (reqRole === Roles.MODERATOR && user.role !== Roles.MEMBER)) {
+      throw new UnauthorizedException();
+    }
+
+    try {
+      user.token = generateCode();
+      await user.save();
+    }
+    catch(e) {
+      throw new BadRequestException();
+    }
+
+    return user.token;
   }
 
 }

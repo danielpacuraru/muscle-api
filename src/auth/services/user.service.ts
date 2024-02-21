@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 
 import { User } from '../schemas/user.schema';
 import { SignupDto } from '../entities/signup.dto';
+import { Roles } from '../entities/roles.enum';
 
 @Injectable()
 export class UserService {
@@ -26,6 +27,14 @@ export class UserService {
 
   public async findByToken(token: string): Promise<User | null> {
     return await this.userModel.findOne({ token }).exec();
+  }
+
+  public async getUsers(): Promise<User[]> {
+    return await this.userModel.find({ role: Roles.MEMBER });
+  }
+
+  public async updatePass(id: string, value: number): Promise<User> {
+    return await this.userModel.findByIdAndUpdate(id, { $inc: { pass: value } }, { new: true });
   }
 
 }
