@@ -10,12 +10,11 @@ export class LicenseSchedule {
     private licenseService: LicenseService
   ) { }
 
-  // @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
-  @Cron('42 22 * * *', {
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
     timeZone: 'Europe/Bucharest'
   })
   async checkStatus() {
-    console.log('it is 22:42');
+    console.log('midnight');
     await this.licenseService.checkLicenseStatus();
   }
 

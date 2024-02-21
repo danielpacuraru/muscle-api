@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { License, LicenseStatus } from '../schemas/license.schema';
 import { UserService } from '../../auth/services/user.service';
 import { AddLicenseDto } from '../entities/add-license.dto';
-import { rightNow, calcExpireDate } from '../entities/time.utils';
+import { rightNow, calcExpireDate, expireDateTest, compareDateTest, endOfDay, endOfDayUTC } from '../entities/time.utils';
 
 @Injectable()
 export class LicenseService {
@@ -28,7 +28,8 @@ export class LicenseService {
   }
 
   async getActiveLicenses(userId: string): Promise<License[]> {
-    const x = rightNow();
+    const exp = endOfDay();
+    const eyp = endOfDayUTC();
     return await this.licenseModel.find({ status: LicenseStatus.ACTIVE, user: userId });
   }
 

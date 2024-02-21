@@ -1,6 +1,8 @@
 import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
 import * as timezone from 'dayjs/plugin/timezone';
 
+dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('Europe/Bucharest');
 
@@ -30,4 +32,28 @@ export function calcExpireDate(addValue: number, addUnit: TimeUnit): Date {
   const today = dayjs().endOf('day');
   const future = today.add(addValue, addUnit);
   return future.toDate();
+}
+
+export function expireDateTest(): Date {
+  const today = dayjs().endOf('day');
+  console.log(today);
+  return today.toDate();
+}
+
+export function compareDateTest(): Date {
+  const today = dayjs().startOf('day');
+  console.log(today);
+  return today.toDate();
+}
+
+export function endOfDay(): Date {
+  const today = dayjs().endOf('day');
+  console.log('end of day', today, today.toDate());
+  return today.toDate();
+}
+
+export function endOfDayUTC(): Date {
+  const today = dayjs().utc().endOf('day');
+  console.log('end of day utc', today, today.toDate());
+  return today.toDate();
 }
